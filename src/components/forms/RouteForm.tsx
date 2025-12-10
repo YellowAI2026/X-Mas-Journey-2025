@@ -4,7 +4,7 @@ import { Card } from '../common/Card';
 import { Button } from '../common/Button';
 import { PersonManager } from './PersonManager';
 import { PreferencesSection } from './PreferencesSection';
-import type { Person, RoutePreferences, RouteGenerationRequest } from '../../types';
+import type { Person, RoutePreferences, RouteGenerationRequest, District } from '../../types';
 
 interface RouteFormProps {
   onSubmit: (request: RouteGenerationRequest) => void;
@@ -19,6 +19,7 @@ export function RouteForm({ onSubmit, isLoading }: RouteFormProps) {
   const [transportMode, setTransportMode] = useState<'foot' | 'public' | 'car' | 'mixed'>('mixed');
   const [budgetMin, setBudgetMin] = useState(0);
   const [budgetMax, setBudgetMax] = useState(100);
+  const [district, setDistrict] = useState<District>('all');
   const [indoorPreference, setIndoorPreference] = useState(false);
   const [childFriendly, setChildFriendly] = useState(false);
   const [additionalWishes, setAdditionalWishes] = useState('');
@@ -38,6 +39,7 @@ export function RouteForm({ onSubmit, isLoading }: RouteFormProps) {
       transportMode,
       budgetMin,
       budgetMax,
+      district,
       indoorPreference,
       childFriendly,
       additionalWishes,
@@ -121,6 +123,8 @@ export function RouteForm({ onSubmit, isLoading }: RouteFormProps) {
         onBudgetMinChange={setBudgetMin}
         budgetMax={budgetMax}
         onBudgetMaxChange={setBudgetMax}
+        district={district}
+        onDistrictChange={setDistrict}
         indoorPreference={indoorPreference}
         onIndoorPreferenceChange={setIndoorPreference}
         childFriendly={childFriendly}

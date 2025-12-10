@@ -125,18 +125,6 @@ export function HeroSection() {
             </circle>
           </g>
         </svg>
-
-        {/* Overlay text */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center px-4">
-            <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-2xl mb-2">
-              München zur Weihnachtszeit
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 drop-shadow-lg">
-              Entdecken Sie die schönsten Weihnachtsrouten
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

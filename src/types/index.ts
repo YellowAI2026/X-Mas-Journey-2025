@@ -10,6 +10,17 @@ export type Interest =
 
 export type TransportMode = 'foot' | 'public' | 'car' | 'mixed';
 
+export type District =
+  | 'all'
+  | 'altstadt-lehel'
+  | 'maxvorstadt'
+  | 'ludwigsvorstadt-isarvorstadt'
+  | 'schwabing-west'
+  | 'schwabing-freimann'
+  | 'au-haidhausen'
+  | 'sendling'
+  | 'obergiesing';
+
 export interface Person {
   id: string;
   ageGroup: AgeGroup;
@@ -24,6 +35,7 @@ export interface RoutePreferences {
   transportMode: TransportMode;
   budgetMin: number;
   budgetMax: number;
+  district?: District;
   indoorPreference?: boolean;
   childFriendly?: boolean;
   additionalWishes?: string;

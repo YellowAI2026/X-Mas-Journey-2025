@@ -1,7 +1,7 @@
 import React from 'react';
-import { Car, Bus, Footprints, Shuffle, DollarSign, Settings } from 'lucide-react';
+import { Car, Bus, Footprints, Shuffle, DollarSign, Settings, MapPin } from 'lucide-react';
 import { Card } from '../common/Card';
-import type { TransportMode } from '../../types';
+import type { TransportMode, District } from '../../types';
 
 interface PreferencesSectionProps {
   transportMode: TransportMode;
@@ -10,6 +10,8 @@ interface PreferencesSectionProps {
   onBudgetMinChange: (value: number) => void;
   budgetMax: number;
   onBudgetMaxChange: (value: number) => void;
+  district?: District;
+  onDistrictChange: (district: District) => void;
   indoorPreference: boolean;
   onIndoorPreferenceChange: (value: boolean) => void;
   childFriendly: boolean;
@@ -29,6 +31,18 @@ const TRANSPORT_MODES: {
   { value: 'mixed', label: 'Gemischt', icon: <Shuffle size={20} /> },
 ];
 
+const DISTRICTS: { value: District; label: string }[] = [
+  { value: 'all', label: 'Ganz München' },
+  { value: 'altstadt-lehel', label: 'Altstadt-Lehel' },
+  { value: 'maxvorstadt', label: 'Maxvorstadt' },
+  { value: 'ludwigsvorstadt-isarvorstadt', label: 'Ludwigsvorstadt-Isarvorstadt' },
+  { value: 'schwabing-west', label: 'Schwabing-West' },
+  { value: 'schwabing-freimann', label: 'Schwabing-Freimann' },
+  { value: 'au-haidhausen', label: 'Au-Haidhausen' },
+  { value: 'sendling', label: 'Sendling' },
+  { value: 'obergiesing', label: 'Obergiesing-Fasangarten' },
+];
+
 export function PreferencesSection({
   transportMode,
   onTransportModeChange,
@@ -36,6 +50,8 @@ export function PreferencesSection({
   onBudgetMinChange,
   budgetMax,
   onBudgetMaxChange,
+  district = 'all',
+  onDistrictChange,
   indoorPreference,
   onIndoorPreferenceChange,
   childFriendly,
@@ -131,6 +147,28 @@ export function PreferencesSection({
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-christmas-red"
             />
           </div>
+        </div>
+
+        {/* District Selection */}
+        <div>
+          <label className="block text-sm font-medium mb-3">
+            <MapPin size={16} className="inline mr-1" />
+            Stadtviertel
+          </label>
+          <select
+            value={district}
+            onChange={(e) => onDistrictChange(e.target.value as District)}
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-christmas-red focus:border-transparent"
+          >
+            {DISTRICTS.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-500 mt-2">
+            Wählen Sie ein spezifisches Stadtviertel für Ihre Route oder "Ganz München" für maximale Auswahl
+          </p>
         </div>
 
         {/* Checkboxes */}

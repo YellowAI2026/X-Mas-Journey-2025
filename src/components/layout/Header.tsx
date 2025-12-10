@@ -29,7 +29,7 @@ export function Header() {
       <div className="relative z-10">
         <div className="flex items-center justify-center gap-3 mb-2">
           <Snowflake className="text-christmas-red" size={32} />
-          <h1 className="text-4xl md:text-5xl font-bold christmas-gradient bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold text-christmas-red">
             Weihnachts-Routen-Planer
           </h1>
           <Snowflake className="text-christmas-green" size={32} />

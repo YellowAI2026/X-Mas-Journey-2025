@@ -67,11 +67,12 @@ Interessen: ${interests}
 Zeitrahmen: ${preferences.startTime} bis ${preferences.endTime} Uhr
 Verkehrsmittel: ${this.translateTransport(preferences.transportMode)}
 Budget: ${preferences.budgetMin}€ - ${preferences.budgetMax}€
+${preferences.district && preferences.district !== 'all' ? `Stadtviertel: ${this.translateDistrict(preferences.district)} (bevorzugt, aber nicht zwingend)` : 'Gebiet: Ganz München'}
 ${preferences.indoorPreference ? 'Bevorzugt indoor-Aktivitäten' : ''}
 ${preferences.childFriendly ? 'Muss kinderfreundlich sein' : ''}
 ${preferences.additionalWishes ? `Zusätzliche Wünsche: ${preferences.additionalWishes}` : ''}
 
-Die Route soll weihnachtliche Highlights, altersgerechte Aktivitäten und praktische Pausen beinhalten.
+Die Route soll weihnachtliche Highlights, altersgerechte Aktivitäten und praktische Pausen beinhalten.${preferences.district && preferences.district !== 'all' ? ` Fokussiere bevorzugt auf Orte im Stadtviertel ${this.translateDistrict(preferences.district)}, aber schließe auch nahegelegene Highlights ein, wenn sie gut passen.` : ''}
 
 WICHTIG: Antworte NUR mit einem JSON-Array von Routenpunkten in folgendem Format:
 [
@@ -194,6 +195,21 @@ Gib konkrete Münchner Orte mit echten Koordinaten und realistischen Zeitangaben
       mixed: 'Gemischt',
     };
     return translations[mode] || mode;
+  }
+
+  private translateDistrict(district: string): string {
+    const translations: Record<string, string> = {
+      all: 'Ganz München',
+      'altstadt-lehel': 'Altstadt-Lehel',
+      maxvorstadt: 'Maxvorstadt',
+      'ludwigsvorstadt-isarvorstadt': 'Ludwigsvorstadt-Isarvorstadt',
+      'schwabing-west': 'Schwabing-West',
+      'schwabing-freimann': 'Schwabing-Freimann',
+      'au-haidhausen': 'Au-Haidhausen',
+      sendling: 'Sendling',
+      obergiesing: 'Obergiesing-Fasangarten',
+    };
+    return translations[district] || district;
   }
 
   private getMockRoute(request: RouteGenerationRequest): Route {
