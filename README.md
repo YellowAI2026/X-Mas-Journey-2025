@@ -82,7 +82,35 @@ npm run preview  # Vorschau des Production Builds
 
 ## 📦 Deployment
 
-### Vercel (Empfohlen)
+### GitHub Pages (Automatisch)
+
+Die App wird automatisch auf GitHub Pages deployed, wenn auf `main` gepusht wird.
+
+**Setup:**
+
+1. **Repository Settings:**
+   - Gehe zu Settings → Pages
+   - Source: **GitHub Actions** auswählen
+
+2. **Optional - API Key hinzufügen:**
+   - Settings → Secrets and variables → Actions
+   - New repository secret: `ANTHROPIC_API_KEY`
+   - Wert: Dein Claude API Key
+
+3. **Push & Deploy:**
+   ```bash
+   git add .
+   git commit -m "Deploy to GitHub Pages"
+   git push origin main
+   ```
+
+4. **App aufrufen:**
+   - URL: `https://DEIN-USERNAME.github.io/REPO-NAME/`
+   - Im Actions Tab kannst du den Deployment-Status sehen
+
+**Hinweis:** Die App funktioniert auch ohne API-Key mit intelligenten Mock-Daten!
+
+### Vercel
 1. Forken Sie das Repository
 2. Verbinden Sie es mit [Vercel](https://vercel.com)
 3. Fügen Sie `VITE_ANTHROPIC_API_KEY` als Umgebungsvariable hinzu
