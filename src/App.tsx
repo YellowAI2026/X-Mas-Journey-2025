@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query';
 import { Header } from './components/layout/Header';
+import { HeroSection } from './components/layout/HeroSection';
 import { RouteForm } from './components/forms/RouteForm';
 import { RouteMap } from './components/map/RouteMap';
 import { RouteTimeline } from './components/route/RouteTimeline';
 import { RouteSummary } from './components/route/RouteSummary';
+import { WeatherCard } from './components/weather/WeatherCard';
+import { PackingListCard } from './components/packing/PackingListCard';
 import { Card } from './components/common/Card';
 import { Button } from './components/common/Button';
 import { claudeRouteService } from './services/claudeApi';
 import { saveRoute, getSavedRoutes } from './utils/storage';
+import { generatePackingList } from './utils/packingList';
+import { weatherService } from './services/weatherService';
 import type { RouteGenerationRequest, Route } from './types';
+import type { WeatherData } from './services/weatherService';
+import type { PackingItem } from './utils/packingList';
 import { Sparkles, History } from 'lucide-react';
 
 const queryClient = new QueryClient();
@@ -19,13 +26,31 @@ function AppContent() {
   const [selectedPointId, setSelectedPointId] = useState<string | undefined>();
   const [showSavedRoutes, setShowSavedRoutes] = useState(false);
   const [savedRoutes] = useState<Route[]>(getSavedRoutes());
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [packingList, setPackingList] = useState<PackingItem[]>([]);
 
   const generateRouteMutation = useMutation({
     mutationFn: (request: RouteGenerationRequest) =>
       claudeRouteService.generateRoute(request),
-    onSuccess: (route) => {
+    onSuccess: async (route, variables) => {
       setCurrentRoute(route);
       saveRoute(route);
+
+      // Generate weather and packing list
+      try {
+        const weatherData = await weatherService.getWeather(variables.preferences.date);
+        setWeather(weatherData);
+
+        const items = generatePackingList(
+          variables.persons,
+          variables.preferences,
+          weatherData
+        );
+        setPackingList(items);
+      } catch (error) {
+        console.error('Error generating additional data:', error);
+      }
+
       // Scroll to route section
       setTimeout(() => {
         document.getElementById('route-display')?.scrollIntoView({
@@ -62,6 +87,9 @@ function AppContent() {
       <Header />
 
       <main className="container mx-auto px-4 max-w-7xl">
+        {/* Hero Section */}
+        <HeroSection />
+
         {/* Form Section */}
         <div className="mb-12">
           <RouteForm
@@ -92,6 +120,19 @@ function AppContent() {
             {/* Summary */}
             <RouteSummary route={currentRoute} />
 
+            {/* Weather and Packing List */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {weather && (
+                <WeatherCard
+                  date={currentRoute.preferences.date}
+                  hasInfants={currentRoute.persons.some((p) => p.ageGroup === 'infant')}
+                />
+              )}
+              {packingList.length > 0 && (
+                <PackingListCard items={packingList} />
+              )}
+            </div>
+
             {/* Map and Timeline Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Map */}
@@ -119,6 +160,8 @@ function AppContent() {
                 onClick={() => {
                   setCurrentRoute(null);
                   setSelectedPointId(undefined);
+                  setWeather(null);
+                  setPackingList([]);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
                 variant="secondary"
